@@ -4,6 +4,8 @@
 
 ![Alpine Sunset](https://img.shields.io/badge/Alpine.js-3.x-blue) ![HTML Canvas](https://img.shields.io/badge/Canvas-API-orange) ![Progressive Web App](https://img.shields.io/badge/PWA-Ready-green)
 
+[GitHub Pages Live Preview](https://wclaytor.github.io/alpine-sunset/index.html)
+
 ## ✨ What is Alpine Sunset?
 
 Alpine Sunset is an interactive web application that generates beautiful sunset scenes using HTML Canvas and Alpine.js. Experiment with colors, mountains, clouds, and celestial bodies to create your perfect sunset visualization.
