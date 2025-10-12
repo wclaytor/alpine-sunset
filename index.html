@@ -15,12 +15,29 @@
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                darkMode: 'class'
+            }
+        }
+    </script>
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
         [x-cloak] { display: none !important; }
+        
+        /* Dark mode transitions */
+        * {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Custom animations for theme switching */
+        .theme-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         
         canvas {
             display: block;
@@ -31,19 +48,26 @@
     </style>
 </head>
 <body>
-    <div x-data="sunsetApp()" x-init="init()" x-cloak class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 md:p-6">
+    <div x-data="sunsetApp()" x-init="init()" x-cloak :class="darkMode ? 'dark' : ''" class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 p-4 md:p-6 theme-transition">
         <div class="max-w-7xl mx-auto">
             <!-- Header -->
-            <header class="bg-gradient-to-r from-orange-500 to-pink-500 rounded-lg shadow-xl p-4 md:p-6 mb-4 md:mb-6">
+            <header class="bg-gradient-to-r from-orange-500 to-pink-500 dark:from-orange-600 dark:to-pink-600 rounded-lg shadow-xl p-4 md:p-6 mb-4 md:mb-6 theme-transition">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div>
                         <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-2">
                             <i class="bi bi-sunset"></i>
                             Alpine Sunset
                         </h1>
-                        <p class="text-orange-100">Create beautiful algorithmic sunset visuals</p>
+                        <p class="text-orange-100 dark:text-orange-200">Create beautiful algorithmic sunset visuals</p>
                     </div>
                     <div class="flex gap-2">
+                        <button @click="toggleDarkMode()" 
+                                class="p-3 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-all duration-200 border border-white/30 hover:border-white/50"
+                                title="Toggle dark mode"
+                                :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+                            <i x-show="!darkMode" class="bi bi-moon text-xl"></i>
+                            <i x-show="darkMode" class="bi bi-sun text-xl"></i>
+                        </button>
                         <button @click="randomize()" 
                                 class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg flex items-center gap-2 transition-colors backdrop-blur-sm">
                             <i class="bi bi-shuffle"></i>
@@ -61,7 +85,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
                 <!-- Canvas Area (Left - 2/3 width on large screens) -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow-xl p-4 md:p-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 md:p-6 theme-transition">
                         <canvas id="sunsetCanvas" 
                                 width="1200" 
                                 height="800"
@@ -72,14 +96,14 @@
                 <!-- Controls Panel (Right - 1/3 width on large screens) -->
                 <div class="space-y-4">
                     <!-- Preset Selection -->
-                    <div class="bg-white rounded-lg shadow-lg p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                            <i class="bi bi-palette text-orange-500"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 theme-transition">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+                            <i class="bi bi-palette text-orange-500 dark:text-orange-400"></i>
                             Preset Scenes
                         </h3>
                         <select x-model="preset" 
                                 @change="applyPreset()"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 theme-transition">
                             <option value="golden-hour">Golden Hour</option>
                             <option value="twilight">Twilight</option>
                             <option value="desert-sunset">Desert Sunset</option>
@@ -90,45 +114,45 @@
                     </div>
 
                     <!-- Sky Colors -->
-                    <div class="bg-white rounded-lg shadow-lg p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                            <i class="bi bi-cloud-sun text-blue-500"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 theme-transition">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+                            <i class="bi bi-cloud-sun text-blue-500 dark:text-blue-400"></i>
                             Sky Colors
                         </h3>
                         <div class="space-y-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Top Color</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Top Color</label>
                                 <input type="color" 
                                        x-model="colors.skyTop" 
                                        @change="render()"
-                                       class="w-full h-10 rounded border border-gray-300 cursor-pointer">
+                                       class="w-full h-10 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Middle Color</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Middle Color</label>
                                 <input type="color" 
                                        x-model="colors.skyMiddle" 
                                        @change="render()"
-                                       class="w-full h-10 rounded border border-gray-300 cursor-pointer">
+                                       class="w-full h-10 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Horizon Color</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horizon Color</label>
                                 <input type="color" 
                                        x-model="colors.skyBottom" 
                                        @change="render()"
-                                       class="w-full h-10 rounded border border-gray-300 cursor-pointer">
+                                       class="w-full h-10 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
                             </div>
                         </div>
                     </div>
 
                     <!-- Sun/Moon -->
-                    <div class="bg-white rounded-lg shadow-lg p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                            <i class="bi bi-brightness-high text-yellow-500"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 theme-transition">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+                            <i class="bi bi-brightness-high text-yellow-500 dark:text-yellow-400"></i>
                             Sun/Moon
                         </h3>
                         <div class="space-y-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Position Y: <span x-text="sun.y"></span>%
                                 </label>
                                 <input type="range" 
@@ -139,7 +163,7 @@
                                        class="w-full">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Size: <span x-text="sun.size"></span>
                                 </label>
                                 <input type="range" 
@@ -150,14 +174,14 @@
                                        class="w-full">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color</label>
                                 <input type="color" 
                                        x-model="sun.color" 
                                        @change="render()"
-                                       class="w-full h-10 rounded border border-gray-300 cursor-pointer">
+                                       class="w-full h-10 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Glow Intensity: <span x-text="sun.glow"></span>
                                 </label>
                                 <input type="range" 
@@ -171,9 +195,9 @@
                     </div>
 
                     <!-- Mountains -->
-                    <div class="bg-white rounded-lg shadow-lg p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                            <i class="bi bi-triangle text-purple-500"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 theme-transition">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+                            <i class="bi bi-triangle text-purple-500 dark:text-purple-400"></i>
                             Mountains
                         </h3>
                         <div class="space-y-3">
@@ -183,11 +207,11 @@
                                            x-model="mountains.enabled" 
                                            @change="render()"
                                            class="w-4 h-4 text-orange-500">
-                                    <span class="text-sm font-medium text-gray-700">Show Mountains</span>
+                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Show Mountains</span>
                                 </label>
                             </div>
                             <div x-show="mountains.enabled">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Layers: <span x-text="mountains.layers"></span>
                                 </label>
                                 <input type="range" 
@@ -198,7 +222,7 @@
                                        class="w-full">
                             </div>
                             <div x-show="mountains.enabled">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Height: <span x-text="mountains.height"></span>%
                                 </label>
                                 <input type="range" 
@@ -209,19 +233,19 @@
                                        class="w-full">
                             </div>
                             <div x-show="mountains.enabled">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Base Color</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Base Color</label>
                                 <input type="color" 
                                        x-model="mountains.color" 
                                        @change="render()"
-                                       class="w-full h-10 rounded border border-gray-300 cursor-pointer">
+                                       class="w-full h-10 rounded border border-gray-300 dark:border-gray-600 cursor-pointer">
                             </div>
                         </div>
                     </div>
 
                     <!-- Clouds -->
-                    <div class="bg-white rounded-lg shadow-lg p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                            <i class="bi bi-cloud text-gray-500"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 theme-transition">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+                            <i class="bi bi-cloud text-gray-500 dark:text-gray-400"></i>
                             Clouds
                         </h3>
                         <div class="space-y-3">
@@ -231,11 +255,11 @@
                                            x-model="clouds.enabled" 
                                            @change="render()"
                                            class="w-4 h-4 text-orange-500">
-                                    <span class="text-sm font-medium text-gray-700">Show Clouds</span>
+                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Show Clouds</span>
                                 </label>
                             </div>
                             <div x-show="clouds.enabled">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Density: <span x-text="clouds.density"></span>
                                 </label>
                                 <input type="range" 
@@ -246,7 +270,7 @@
                                        class="w-full">
                             </div>
                             <div x-show="clouds.enabled">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Opacity: <span x-text="clouds.opacity"></span>%
                                 </label>
                                 <input type="range" 
@@ -260,9 +284,9 @@
                     </div>
 
                     <!-- Stars -->
-                    <div class="bg-white rounded-lg shadow-lg p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                            <i class="bi bi-star text-yellow-400"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 theme-transition">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 flex items-center gap-2">
+                            <i class="bi bi-star text-yellow-400 dark:text-yellow-300"></i>
                             Stars
                         </h3>
                         <div class="space-y-3">
@@ -272,11 +296,11 @@
                                            x-model="stars.enabled" 
                                            @change="render()"
                                            class="w-4 h-4 text-orange-500">
-                                    <span class="text-sm font-medium text-gray-700">Show Stars</span>
+                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Show Stars</span>
                                 </label>
                             </div>
                             <div x-show="stars.enabled">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Count: <span x-text="stars.count"></span>
                                 </label>
                                 <input type="range" 
@@ -300,6 +324,7 @@
                 canvas: null,
                 ctx: null,
                 preset: 'golden-hour',
+                darkMode: false,
                 
                 colors: {
                     skyTop: '#1a1a3e',
@@ -339,8 +364,41 @@
                     this.canvas = document.getElementById('sunsetCanvas');
                     this.ctx = this.canvas.getContext('2d');
                     this.generateStars();
+                    this.loadDarkModePreference();
                     this.loadFromStorage();
                     this.render();
+                },
+                
+                // === DARK MODE METHODS ===
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    this.updateDarkMode();
+                    this.saveDarkModePreference();
+                },
+
+                updateDarkMode() {
+                    if (this.darkMode) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                loadDarkModePreference() {
+                    const saved = localStorage.getItem('alpine-sunset-darkMode');
+                    if (saved !== null) {
+                        this.darkMode = saved === 'true';
+                    } else {
+                        // Detect system preference
+                        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                            this.darkMode = true;
+                        }
+                    }
+                    this.updateDarkMode();
+                },
+
+                saveDarkModePreference() {
+                    localStorage.setItem('alpine-sunset-darkMode', this.darkMode.toString());
                 },
                 
                 // === PRESET METHODS ===
