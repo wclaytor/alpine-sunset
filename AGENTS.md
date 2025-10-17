@@ -13,35 +13,35 @@ This project uses five specialized roles that collaborate to ensure comprehensiv
 - Define user value and business impact
 - Create acceptance criteria and success metrics
 - Prioritize features based on user needs
-- **Reference**: [Product-Owner Role Definition](./.github/roles/Product-Owner.md)
+- **Reference**: [Product-Owner Role Definition](docs/roles/Product-Owner.md)
 
 ### 🏗️ Architect Role (Technical Blueprint)
 **When to adopt**: System design, technology decisions, performance requirements
 - Design technical architecture and patterns
 - Make technology stack decisions with justification
 - Define performance and scalability requirements
-- **Reference**: [Architect Role Definition](./.github/roles/Architect.md)
+- **Reference**: [Architect Role Definition](docs/roles/Architect.md)
 
 ### 🎨 Designer Role (User Experience)
 **When to adopt**: UI/UX issues, accessibility requirements, responsive design
 - Create UI/UX specifications and design system
 - Ensure accessibility compliance (WCAG 2.1 AA)
 - Define responsive design patterns
-- **Reference**: [Designer Role Definition](./.github/roles/Designer.md)
+- **Reference**: [Designer Role Definition](docs/roles/Designer.md)
 
 ### 💻 Developer Role (Implementation)
 **When to adopt**: Code implementation, Alpine.js patterns, bug fixes
 - Implement Alpine.js reactive patterns
 - Follow established coding standards
 - Optimize performance and handle errors
-- **Reference**: [Developer Role Definition](./.github/roles/Developer.md)
+- **Reference**: [Developer Role Definition](docs/roles/Developer.md)
 
 ### 🧪 QA-Engineer Role (Quality Assurance)
 **When to adopt**: Testing requirements, quality validation, cross-browser compatibility
 - Create comprehensive test strategies
 - Validate accessibility and performance
 - Ensure cross-browser compatibility
-- **Reference**: [QA-Engineer Role Definition](./.github/roles/QA-Engineer.md)
+- **Reference**: [QA-Engineer Role Definition](docs/roles/QA-Engineer.md)
 
 ## Role Selection Guidelines
 
@@ -53,6 +53,9 @@ This project uses five specialized roles that collaborate to ensure comprehensiv
 - **Testing Issues** → QA-Engineer Role
 
 ### Multi-Role Issues (Use collaboration pattern):
+
+[Role Collaboration Guide](docs/guides/Roles-Collaboration.md)
+
 - **New Features** → Product-Owner → Architect → Designer → Developer → QA-Engineer
 - **Architecture Changes** → Architect → Developer → QA-Engineer
 - **User Experience Improvements** → Product-Owner → Designer → QA-Engineer
